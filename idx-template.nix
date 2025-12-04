@@ -9,7 +9,7 @@
   bootstrap = ''    
     mkdir "$out"
     mkdir -p "$out/.idx/"
-    cp -rf ${./dev.nix} "$out/.idx/dev.nix"
+    cp -rf ${./.idx/dev.nix} "$out/.idx/dev.nix"
     
     # Copy all project files
     shopt -s dotglob

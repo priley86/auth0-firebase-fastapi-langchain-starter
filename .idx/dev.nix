@@ -20,15 +20,11 @@
     # Backend API URL for frontend
     VITE_API_URL = "https://8000-$WEB_HOST";
     
-    # Frontend URL for CORS and Auth0 callback
+    # Frontend URL for CORS
     FRONTEND_HOST = "https://5173-$WEB_HOST";
-    APP_BASE_URL = "https://5173-$WEB_HOST";
     
     # Backend CORS origins
     BACKEND_CORS_ORIGINS = "https://8000-$WEB_HOST,https://5173-$WEB_HOST";
-    
-    # NOTE: Secret variables (Auth0, API keys) must be set in backend/.env
-    # See backend/.env.example for required variables
   };
   
   idx = {
@@ -60,6 +56,10 @@
     workspace = {
       # Runs when a workspace is first created
       onCreate = {
+        # Copy environment files
+        copy-backend-env = "cp backend/.env.example backend/.env";
+        copy-frontend-env = "cp frontend/.env.example frontend/.env";
+        
         # Install frontend dependencies
         npm-install = "cd frontend && npm install";
         
