@@ -53,8 +53,6 @@ OPENAI_API_KEY=your-google-ai-key  # Get at: https://aistudio.google.com/app/api
 
 ### Frontend `.env`
 ```env
-VITE_AUTH0_DOMAIN=your-tenant.auth0.com
-VITE_AUTH0_CLIENT_ID=your-client-id
 VITE_API_URL=http://localhost:8000
 ```
 

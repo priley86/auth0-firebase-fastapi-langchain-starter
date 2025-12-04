@@ -20,4 +20,4 @@ dependencies = [
 ]
 
 [tool.uv]
-prerelease-mode = "allow"
+prerelease = "allow"

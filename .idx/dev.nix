@@ -17,11 +17,17 @@
     # Set Python to use Python 3.13 from nix
     PYTHON = "${pkgs.python313}/bin/python3";
     
+    # Increase UV HTTP timeout for slower network connections
+    UV_HTTP_TIMEOUT = "120";
+    
+    # Backend base URL (where the FastAPI server runs)
+    APP_BASE_URL = "https://8000-$WEB_HOST";
+    
     # LangGraph server URL
     LANGGRAPH_API_URL = "http://localhost:54367";
     
-    # Backend API URL for frontend
-    VITE_API_URL = "https://8000-$WEB_HOST";
+    # Backend API URL for frontend and Vite proxy
+    VITE_API_URL = "http://localhost:8000";
     
     # Frontend URL for CORS
     FRONTEND_HOST = "https://5173-$WEB_HOST";

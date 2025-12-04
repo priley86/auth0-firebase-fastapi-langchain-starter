@@ -9,6 +9,7 @@
   
   env = {
     PYTHON = "${pkgs.python313}/bin/python3";
+    UV_HTTP_TIMEOUT = "120";
   };
   
   bootstrap = ''    

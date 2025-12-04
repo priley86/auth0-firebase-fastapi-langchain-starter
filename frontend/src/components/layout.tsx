@@ -5,6 +5,7 @@ import useAuth, { getLogoutUrl } from "@/lib/use-auth";
 import UserButton from "@/components/auth0/user-button";
 import { ActiveLink } from "@/components/navbar";
 
+
 export default function Layout() {
   const { user } = useAuth();
 

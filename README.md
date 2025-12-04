@@ -103,10 +103,6 @@ BACKEND_CORS_ORIGINS=http://localhost:8000,http://localhost:5173
 Copy `frontend/.env.example` to `frontend/.env` and configure:
 
 ```env
-# Auth0 Configuration
-VITE_AUTH0_DOMAIN=your-tenant.auth0.com
-VITE_AUTH0_CLIENT_ID=your-client-id
-
 # API URL
 VITE_API_URL=http://localhost:8000
 ```
