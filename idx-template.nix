@@ -3,7 +3,7 @@
     pkgs.python3
     pkgs.uv
     pkgs.pipx
-    pkgs.nodejs_20
+    pkgs.nodejs_22
   ];
   
   bootstrap = ''    

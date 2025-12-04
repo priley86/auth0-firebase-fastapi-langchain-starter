@@ -9,7 +9,7 @@
     pkgs.python3
     pkgs.uv
     pkgs.pipx
-    pkgs.nodejs_20
+    pkgs.nodejs_22
   ];
   
   # Sets environment variables in the workspace
@@ -64,7 +64,7 @@
         npm-install = "cd frontend && npm install";
         
         # Install backend dependencies
-        backend-setup = "cd backend && uv sync";
+        backend-setup = "cd backend && uv sync --prerelease=allow";
         
         # Open editors for the following files by default, if they exist:
         default.openFiles = [ 
