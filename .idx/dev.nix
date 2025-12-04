@@ -2,11 +2,11 @@
 # see: https://developers.google.com/idx/guides/customize-idx-env
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
+  channel = "unstable";
   
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.python3
+    pkgs.python313
     pkgs.uv
     pkgs.pipx
     pkgs.nodejs_22
@@ -14,6 +14,9 @@
   
   # Sets environment variables in the workspace
   env = {
+    # Set Python to use Python 3.13 from nix
+    PYTHON = "${pkgs.python313}/bin/python3";
+    
     # LangGraph server URL
     LANGGRAPH_API_URL = "http://localhost:54367";
     
@@ -64,7 +67,7 @@
         npm-install = "cd frontend && npm install";
         
         # Install backend dependencies
-        backend-setup = "cd backend && uv sync --prerelease=allow";
+        backend-setup = "cd backend && uv sync";
         
         # Open editors for the following files by default, if they exist:
         default.openFiles = [ 

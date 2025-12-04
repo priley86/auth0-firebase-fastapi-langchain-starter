@@ -1,10 +1,15 @@
 { pkgs, ... }: {
+  channel = "unstable";
   packages = [
-    pkgs.python3
+    pkgs.python313
     pkgs.uv
     pkgs.pipx
     pkgs.nodejs_22
   ];
+  
+  env = {
+    PYTHON = "${pkgs.python313}/bin/python3";
+  };
   
   bootstrap = ''    
     mkdir "$out"
