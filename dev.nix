@@ -20,11 +20,15 @@
     # Backend API URL for frontend
     VITE_API_URL = "https://8000-$WEB_HOST";
     
-    # Frontend URL for CORS
+    # Frontend URL for CORS and Auth0 callback
     FRONTEND_HOST = "https://5173-$WEB_HOST";
+    APP_BASE_URL = "https://5173-$WEB_HOST";
     
     # Backend CORS origins
     BACKEND_CORS_ORIGINS = "https://8000-$WEB_HOST,https://5173-$WEB_HOST";
+    
+    # NOTE: Secret variables (Auth0, API keys) must be set in backend/.env
+    # See backend/.env.example for required variables
   };
   
   idx = {

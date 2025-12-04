@@ -319,8 +319,7 @@ When making changes that affect users:
 2. Update `SETUP.md` - If setup process changes
 3. Update `STRUCTURE.md` - If architecture changes
 4. Update `QUICKSTART.md` - If quick start steps change
-5. Update `CHANGELOG.md` - Always log changes
-6. Update this file (`GEMINI.md`) - If development patterns change
+5. Update this file (`GEMINI.md`) - If development patterns change
 
 ## Quick Reference: Where to Make Common Changes
 
