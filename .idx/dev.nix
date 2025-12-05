@@ -21,7 +21,8 @@
     UV_HTTP_TIMEOUT = "120";
     
     # Backend base URL (where the FastAPI server runs)
-    APP_BASE_URL = "https://8000-$WEB_HOST";
+    # Frontend URL since Vite proxies /api to backend
+    APP_BASE_URL = "https://9000-$WEB_HOST";
     
     # LangGraph server URL
     LANGGRAPH_API_URL = "http://localhost:54367";
@@ -30,10 +31,10 @@
     VITE_API_URL = "http://localhost:8000";
     
     # Frontend URL for CORS
-    FRONTEND_HOST = "https://5173-$WEB_HOST";
+    FRONTEND_HOST = "https://9000-$WEB_HOST";
     
     # Backend CORS origins
-    BACKEND_CORS_ORIGINS = "https://8000-$WEB_HOST,https://5173-$WEB_HOST";
+    BACKEND_CORS_ORIGINS = "https://9000-$WEB_HOST";
   };
   
   idx = {
@@ -49,13 +50,13 @@
     previews = {
       enable = true;
       previews = {
-        # Frontend preview on port 5173
+        # Frontend preview on port 9000 (matches APP_BASE_URL and CORS config)
         web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--host" "0.0.0.0"];
+          command = ["npm" "run" "dev" "--" "--port" "9000" "--host" "0.0.0.0"];
           manager = "web";
           cwd = "frontend";
           env = {
-            PORT = "$PORT";
+            PORT = "9000";
           };
         };
       };
@@ -90,7 +91,7 @@
         start-backend = "cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000";
         
         # Start the LangGraph server
-        start-langgraph = "cd backend && uv run langgraph dev --port 54367 --host 0.0.0.0 --no-browser";
+        start-langgraph = "cd backend && uv run langgraph dev --port 54367 --host 0.0.0.0 --no-browser --alow-blocking";
       };
     };
   };

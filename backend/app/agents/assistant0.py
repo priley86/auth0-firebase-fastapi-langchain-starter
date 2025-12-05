@@ -6,10 +6,15 @@ from datetime import date
 
 tools = [list_upcoming_events]
 
-# Initialize the LLM with Gemini via OpenAI-compatible interface
-# Using langchain_openai's ChatOpenAI which supports Gemini models
-# through Google's OpenAI-compatible API
-llm = ChatOpenAI(model="gemini-2.0-flash-exp")
+# Initialize the LLM
+# This template supports both OpenAI and Google Gemini models
+# 
+# For OpenAI (using langchain_openai.ChatOpenAI):
+llm = ChatOpenAI(model="gpt-4o-mini")  # or "gpt-4o", "gpt-4-turbo", etc.
+#
+# For Google Gemini (see GEMINI.md for setup):
+# from langchain_google_genai import ChatGoogleGenerativeAI
+# llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")  # or "gemini-pro", "gemini-1.5-pro", etc.
 
 def get_prompt():
     today_str = date.today().strftime('%Y-%m-%d')

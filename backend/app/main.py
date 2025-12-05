@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from starlette.middleware.sessions import SessionMiddleware
 
 from app.core.auth import auth_client
 from app.core.config import settings

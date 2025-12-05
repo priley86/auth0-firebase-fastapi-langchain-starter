@@ -7,10 +7,12 @@ This guide will walk you through setting up the Auth0 + Firebase + FastAPI + Lan
 Before you begin, make sure you have:
 
 1. **Auth0 Account**: Sign up at [auth0.com](https://auth0.com/)
-2. **Google AI API Key**: Get one at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) for Gemini
+2. **LLM API Key**: Choose one:
+   - **OpenAI API Key**: Get one at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+   - **Google AI API Key**: Get one at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 3. **Firebase Studio Account** (optional): For cloud development at [idx.google.com](https://idx.google.com/)
 
-> **Note**: This template uses Google Gemini by default. The API key is set via `OPENAI_API_KEY` environment variable as LangChain uses OpenAI-compatible interfaces. To use OpenAI instead, simply change the model name in `backend/app/agents/assistant0.py` to an OpenAI model (e.g., `gpt-4o-mini`).
+> **Note**: This template supports both OpenAI and Google Gemini models. The default configuration uses OpenAI's `gpt-4o-mini`. You can easily switch between providers by modifying `backend/app/agents/assistant0.py` - see the GEMINI.md guide for detailed instructions.
 
 ## Auth0 Setup
 
@@ -97,9 +99,10 @@ AUTH0_CLIENT_ID=your-client-id
 AUTH0_CLIENT_SECRET=your-client-secret
 AUTH0_SECRET=your-generated-secret-key
 
-# Google AI API (for Gemini)
-# Get your key at: https://aistudio.google.com/app/apikey
-OPENAI_API_KEY=your-google-ai-api-key
+# LLM API Key (choose one based on your provider)
+# For OpenAI: Get your key at https://platform.openai.com/api-keys
+# For Google Gemini: Get your key at https://aistudio.google.com/app/apikey
+OPENAI_API_KEY=your-api-key
 
 # Application URLs
 APP_BASE_URL=http://localhost:8000

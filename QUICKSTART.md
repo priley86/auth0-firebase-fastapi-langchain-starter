@@ -16,7 +16,7 @@
 - Node.js 20+
 - uv (Python package manager)
 - Auth0 account
-- Google AI API key (for Gemini)
+- LLM API key (OpenAI or Google Gemini)
 
 ### Quick Commands
 
@@ -74,7 +74,7 @@ For Firebase Studio, also add:
 | Component | Technology |
 |-----------|-----------|
 | Backend | FastAPI + Python 3.13 |
-| AI Agent | LangGraph + Google Gemini |
+| AI Agent | LangGraph (OpenAI/Gemini) |
 | Frontend | React 19 + Vite + TypeScript |
 | Styling | Tailwind CSS |
 | Auth | Auth0 |
