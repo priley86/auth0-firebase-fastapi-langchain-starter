@@ -14,13 +14,13 @@ def parse_cors(v: Any) -> list[str] | str:
 class Settings(BaseSettings):
     APP_NAME: str = "Assistant0"
     API_PREFIX: str = "/api"
-    AUTH0_DOMAIN: str
-    AUTH0_CLIENT_ID: str
-    AUTH0_CLIENT_SECRET: str
-    AUTH0_SECRET: str
-    APP_BASE_URL: str
+    AUTH0_DOMAIN: str = ""
+    AUTH0_CLIENT_ID: str = ""
+    AUTH0_CLIENT_SECRET: str = ""
+    AUTH0_SECRET: str = ""
+    APP_BASE_URL: str = ""
 
-    OPENAI_API_KEY: str
+    OPENAI_API_KEY: str = ""
 
     # LangGraph Configuration
     LANGGRAPH_API_URL: str = "http://localhost:54367"

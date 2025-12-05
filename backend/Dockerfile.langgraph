@@ -38,5 +38,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:54367/health').read()" || exit 1
 
 # Run LangGraph server
-# Use 'up' for production (more stable) or 'dev' for development features
-CMD ["uv", "run", "langgraph", "up", "--host", "0.0.0.0", "--port", "54367"]
+# Run Python directly with our custom server script
+CMD ["uv", "run", "python", "app/langgraph_server.py"]

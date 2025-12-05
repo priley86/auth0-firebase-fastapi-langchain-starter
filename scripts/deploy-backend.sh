@@ -68,7 +68,7 @@ gcloud services enable containerregistry.googleapis.com
 echo -e "${BLUE}Building container image...${NC}"
 echo "This may take a few minutes..."
 cd backend
-gcloud builds submit --tag ${IMAGE_NAME} -f Dockerfile .
+gcloud builds submit --tag ${IMAGE_NAME} .
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}Error: Failed to build container image${NC}"

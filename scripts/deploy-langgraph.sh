@@ -44,9 +44,18 @@ if [ -z "$PROJECT_ID" ]; then
     exit 1
 fi
 
-if [ -z "$OPENAI_API_KEY" ]; then
-    echo -e "${YELLOW}Warning: OPENAI_API_KEY is not set${NC}"
-    echo "The deployment will continue, but you'll need to set it later"
+if [ -z "$OPENAI_API_KEY" ] && [ -z "$GOOGLE_API_KEY" ]; then
+    echo -e "${RED}Error: Neither OPENAI_API_KEY nor GOOGLE_API_KEY is set${NC}"
+    echo "Set at least one in backend/.env.production"
+    exit 1
+fi
+
+if [ ! -z "$OPENAI_API_KEY" ]; then
+    echo -e "${GREEN}✓ OPENAI_API_KEY is set${NC}"
+fi
+
+if [ ! -z "$GOOGLE_API_KEY" ]; then
+    echo -e "${GREEN}✓ GOOGLE_API_KEY is set${NC}"
 fi
 
 # Check if gcloud is installed
@@ -70,15 +79,54 @@ gcloud services enable containerregistry.googleapis.com
 echo -e "${BLUE}Building container image...${NC}"
 echo "This may take a few minutes..."
 cd backend
-gcloud builds submit --tag ${IMAGE_NAME} -f Dockerfile.langgraph .
+
+# Create a temporary cloudbuild.yaml for the custom Dockerfile
+cat > /tmp/cloudbuild-langgraph.yaml <<EOF
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '${IMAGE_NAME}', '-f', 'Dockerfile.langgraph', '.']
+images:
+- '${IMAGE_NAME}'
+EOF
+
+gcloud builds submit --config /tmp/cloudbuild-langgraph.yaml .
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}Error: Failed to build container image${NC}"
+    rm -f /tmp/cloudbuild-langgraph.yaml
     exit 1
 fi
 
+rm -f /tmp/cloudbuild-langgraph.yaml
+
 # Prepare environment variables for deployment
-ENV_VARS="OPENAI_API_KEY=${OPENAI_API_KEY}"
+ENV_VARS=""
+
+# Add LLM API keys
+if [ ! -z "$OPENAI_API_KEY" ]; then
+    ENV_VARS="OPENAI_API_KEY=${OPENAI_API_KEY}"
+fi
+
+if [ ! -z "$GOOGLE_API_KEY" ]; then
+    if [ -z "$ENV_VARS" ]; then
+        ENV_VARS="GOOGLE_API_KEY=${GOOGLE_API_KEY}"
+    else
+        ENV_VARS="${ENV_VARS},GOOGLE_API_KEY=${GOOGLE_API_KEY}"
+    fi
+fi
+
+# Add Auth0 configuration (required for agent tools)
+if [ ! -z "$AUTH0_DOMAIN" ]; then
+    ENV_VARS="${ENV_VARS},AUTH0_DOMAIN=${AUTH0_DOMAIN}"
+fi
+
+if [ ! -z "$AUTH0_CLIENT_ID" ]; then
+    ENV_VARS="${ENV_VARS},AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}"
+fi
+
+if [ ! -z "$AUTH0_CLIENT_SECRET" ]; then
+    ENV_VARS="${ENV_VARS},AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}"
+fi
 
 # Add optional environment variables if set
 if [ ! -z "$LANGCHAIN_API_KEY" ]; then
