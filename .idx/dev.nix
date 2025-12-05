@@ -67,8 +67,8 @@
       # Runs when a workspace is first created
       onCreate = {
         # Copy environment files
-        copy-backend-env = "cp backend/.env.example backend/.env";
-        copy-frontend-env = "cp frontend/.env.example frontend/.env";
+        copy-backend-env = "cp backend/.env.example backend/.env && cp backend/.env.production.example backend/.env.production";
+        copy-frontend-env = "cp frontend/.env.example frontend/.env && cp frontend/.env.production.example frontend/.env.production";
         
         # Install frontend dependencies
         npm-install = "cd frontend && npm install";

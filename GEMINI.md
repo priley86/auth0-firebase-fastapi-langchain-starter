@@ -17,7 +17,7 @@ This is a **Firebase Studio (Project IDX) community template** that provides a f
 ### Three-Server Architecture
 1. **FastAPI Backend** (port 8000) - Main API server with Auth0 authentication
 2. **LangGraph Server** (port 54367) - AI agent runtime
-3. **Vite Frontend** (port 5173) - React web application
+3. **Vite Frontend** (port 9000) - React web application
 
 ### Data Flow
 ```
@@ -223,7 +223,7 @@ agent = create_react_agent(llm, tools)
 - ❌ `idx-template.json` structure (breaks Firebase Studio integration)
 - ❌ `idx-template.nix` unless changing bootstrap logic
 - ❌ Authentication flow without understanding Auth0 implications
-- ❌ Port numbers (8000, 54367, 5173) without updating all references
+- ❌ Port numbers (8000, 54367, 9000) without updating all references
 
 ### ALWAYS consider:
 - ✅ Environment variable changes need updates in multiple `.env.example` files
@@ -333,10 +333,10 @@ npm run dev
 
 When making changes that affect users:
 
-1. Update `README.md` - Main overview
-2. Update `SETUP.md` - If setup process changes
+1. Update `README.md` - Main overview and feature list
+2. Update `SETUP.md` - If setup process or quick start changes
 3. Update `STRUCTURE.md` - If architecture changes
-4. Update `QUICKSTART.md` - If quick start steps change
+4. Update `DEPLOYMENT.md` - If deployment process changes
 5. Update this file (`GEMINI.md`) - If development patterns change
 
 ## Quick Reference: Where to Make Common Changes
@@ -359,7 +359,7 @@ When making changes that affect users:
 ### Preview URLs
 Firebase Studio generates dynamic URLs like:
 - Backend: `https://8000-WORKSPACE_ID.idx.google.com`
-- Frontend: `https://5173-WORKSPACE_ID.idx.google.com`
+- Frontend: `https://9000-WORKSPACE_ID.idx.google.com`
 
 These are auto-configured in `dev.nix` using `$WEB_HOST` variable.
 

@@ -73,105 +73,7 @@ The project is divided into three main parts:
 
 > **⚠️ Important for Firebase Studio users**: The embedded "Web" preview window may show authentication errors due to third-party cookie blocking. **Always use the "Preview" button or "Open in new tab" button** (↗️) to open the application in a full browser tab where authentication will work correctly.
 
-### Environment Variables
-
-#### Backend (`backend/.env`)
-
-Copy `backend/.env.example` to `backend/.env` and configure:
-
-```env
-# Auth0 Configuration
-AUTH0_DOMAIN=your-tenant.auth0.com
-AUTH0_CLIENT_ID=your-client-id
-AUTH0_CLIENT_SECRET=your-client-secret
-AUTH0_SECRET=your-secret-key
-
-# LLM API Key (choose one based on your provider)
-# For OpenAI: Get your key at https://platform.openai.com/api-keys
-# For Gemini: Get your key at https://aistudio.google.com/app/apikey
-# (see GEMINI.md for switching between providers)
-OPENAI_API_KEY=your-api-key
-
-# Application URLs
-APP_BASE_URL=http://localhost:8000
-FRONTEND_HOST=http://localhost:5173
-
-# LangGraph (optional, defaults are set)
-LANGGRAPH_API_URL=http://localhost:54367
-LANGGRAPH_API_KEY=
-
-# CORS
-BACKEND_CORS_ORIGINS=http://localhost:8000,http://localhost:5173
-```
-
-#### Frontend (`frontend/.env`)
-
-Copy `frontend/.env.example` to `frontend/.env` and configure:
-
-```env
-# API URL
-VITE_API_URL=http://localhost:8000
-```
-
-### Local Development (without Firebase Studio)
-
-If you want to run this locally without Firebase Studio:
-
-#### 1. Clone the repository
-
-```bash
-git clone https://github.com/priley86/auth0-firebase-fastapi-langchain-starter.git
-cd auth0-firebase-fastapi-langchain-starter
-```
-
-#### 2. Setup the backend
-
-```bash
-cd backend
-uv sync
-cp .env.example .env
-# Edit .env with your credentials
-```
-
-Run the FastAPI server:
-
-```bash
-source .venv/bin/activate
-fastapi dev app/main.py
-```
-
-#### 3. Start the LangGraph server
-
-In a new terminal:
-
-```bash
-cd backend
-source .venv/bin/activate
-langgraph dev --port 54367 --no-browser
-```
-
-#### 4. Setup the frontend
-
-In a new terminal:
-
-```bash
-cd frontend
-npm install
-cp .env.example .env
-# Edit .env with your credentials
-npm run dev
-```
-
-The frontend will be available at `http://localhost:5173`
-
-## Auth0 Setup
-
-1. Create a new Auth0 application (Regular Web Application)
-2. Configure the following settings:
-   - **Allowed Callback URLs**: `http://localhost:5173/callback`
-   - **Allowed Logout URLs**: `http://localhost:5173`
-   - **Allowed Web Origins**: `http://localhost:5173`
-3. Copy your Domain, Client ID, and Client Secret to your `.env` files
+See the **[SETUP.md](SETUP.md)** for further instructions about setup with Auth0 and local testing with Firebase Studio.
 
 ## Project Structure
 
@@ -210,11 +112,30 @@ The frontend uses Tailwind CSS. You can customize:
 
 ## Deployment
 
-This template is optimized for Firebase Studio development, but can be deployed to:
+This template includes production-ready deployment scripts for Google Cloud Run and Firebase Hosting.
 
-- **Backend**: Google Cloud Run, AWS Lambda, or any container platform
-- **Frontend**: Vercel, Netlify, or Firebase Hosting
-- **LangGraph**: LangGraph Cloud or self-hosted
+### 📚 Documentation
+
+- **[SETUP.md](SETUP.md)** - Initial setup and local development
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment guide
+
+### 🚀 Quick Deploy
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete instructions, or use the quick deploy scripts:
+
+```bash
+# Deploy all services to production
+export GCP_PROJECT_ID="your-project-id"
+./scripts/deploy-langgraph.sh    # Deploy AI agents
+./scripts/deploy-backend.sh      # Deploy API server
+firebase deploy --only hosting    # Deploy frontend
+```
+
+### 🌐 Architecture
+
+- **Backend Services**: Google Cloud Run (auto-scaling containers)
+- **Frontend**: Firebase Hosting (global CDN)
+- **Alternative Platforms**: AWS Lambda, Vercel, Netlify, LangGraph Cloud
 
 ## Learn More
 

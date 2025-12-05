@@ -2,6 +2,39 @@
 
 This guide will walk you through setting up the Auth0 + Firebase + FastAPI + LangChain Starter template.
 
+## 🚀 Quick Start
+
+### One-Click Setup (Recommended)
+
+[![Open in IDX](https://cdn.idx.dev/btn/open_dark_32@2x.png)](https://idx.google.com/new?template=https://github.com/priley86/auth0-firebase-fastapi-langchain-starter)
+
+1. Click the button above
+2. Wait for workspace initialization
+3. Configure your `.env` files (see below)
+4. Start chatting with your AI assistant!
+
+### Local Development Setup
+
+```bash
+# Backend
+cd backend
+uv sync
+cp .env.example .env  # Edit with your credentials
+source .venv/bin/activate
+fastapi dev app/main.py  # Terminal 1
+
+# LangGraph (in a new terminal)
+cd backend
+source .venv/bin/activate
+langgraph dev --port 54367 --no-browser  # Terminal 2
+
+# Frontend (in a new terminal)
+cd frontend
+npm install
+cp .env.example .env  # Edit with your credentials
+npm run dev  # Terminal 3
+```
+
 ## Prerequisites
 
 Before you begin, make sure you have:
@@ -11,6 +44,12 @@ Before you begin, make sure you have:
    - **OpenAI API Key**: Get one at [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
    - **Google AI API Key**: Get one at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 3. **Firebase Studio Account** (optional): For cloud development at [idx.google.com](https://idx.google.com/)
+
+### For Local Development Only
+
+- **Python 3.13+**: [python.org/downloads](https://www.python.org/downloads/)
+- **Node.js 20+**: [nodejs.org](https://nodejs.org/)
+- **uv**: Python package manager - [docs.astral.sh/uv](https://docs.astral.sh/uv/)
 
 > **Note**: This template supports both OpenAI and Google Gemini models. The default configuration uses OpenAI's `gpt-4o-mini`. You can easily switch between providers by modifying `backend/app/agents/assistant0.py` - see the GEMINI.md guide for detailed instructions.
 
@@ -31,33 +70,50 @@ In your application settings:
 
 #### Application URIs
 
+For Firebase Studio/IDX, you'll need to add:
 - **Allowed Callback URLs**: 
   ```
-  http://localhost:5173/callback
+  https://9000-<YOUR-WORKSPACE-ID>.<YOUR-CLUSTER-ID>.cloudworkkstations.dev/api/callback
   ```
-  
 - **Allowed Logout URLs**:
   ```
-  http://localhost:5173
+  https://9000-<YOUR-WORKSPACE-ID>.<YOUR-CLUSTER-ID>.cloudworkkstations.dev
   ```
-  
 - **Allowed Web Origins**:
   ```
-  http://localhost:5173
+  https://9000-<YOUR-WORKSPACE-ID>.<YOUR-CLUSTER-ID>.cloudworkkstations.dev
   ```
 
-For Firebase Studio/IDX, you'll also need to add:
+For your deployed Firebase app, you'll need the same:
 - **Allowed Callback URLs**: 
   ```
-  https://5173-YOUR-WORKSPACE-ID.idx.google.com/callback
+  https://<YOUR-DOMAIN>/api/callback
   ```
+  
 - **Allowed Logout URLs**:
   ```
-  https://5173-YOUR-WORKSPACE-ID.idx.google.com
+  https://<YOUR-DOMAIN>
   ```
+  
 - **Allowed Web Origins**:
   ```
-  https://5173-YOUR-WORKSPACE-ID.idx.google.com
+  https://<YOUR-DOMAIN>
+  ```
+
+For local development, you'll want to also add the following:
+- **Allowed Callback URLs**: 
+  ```
+  http://localhost:9000/api/callback
+  ```
+  
+- **Allowed Logout URLs**:
+  ```
+  http://localhost:9000
+  ```
+  
+- **Allowed Web Origins**:
+  ```
+  http://localhost:9000
   ```
 
 #### Save Your Credentials
@@ -106,14 +162,14 @@ OPENAI_API_KEY=your-api-key
 
 # Application URLs
 APP_BASE_URL=http://localhost:8000
-FRONTEND_HOST=http://localhost:5173
+FRONTEND_HOST=http://localhost:9000
 
 # LangGraph Configuration
 LANGGRAPH_API_URL=http://localhost:54367
 LANGGRAPH_API_KEY=
 
 # CORS Origins (comma-separated)
-BACKEND_CORS_ORIGINS=http://localhost:8000,http://localhost:5173
+BACKEND_CORS_ORIGINS=http://localhost:8000,http://localhost:9000
 ```
 
 ### Frontend Configuration
@@ -138,6 +194,9 @@ VITE_API_URL=http://localhost:8000
 2. Wait for the workspace to initialize
 3. Configure your `.env` files as described above
 4. The servers will start automatically!
+
+> **⚠️ Important for Firebase Studio users**: The embedded "Web" preview window may show authentication errors due to third-party cookie blocking. **Always use the "Preview" button or "Open in new tab" button** (↗️) to open the application in a full browser tab where authentication will work correctly.
+
 
 ### Option 2: Local Development
 
@@ -170,11 +229,11 @@ npm install
 npm run dev
 ```
 
-The frontend will run on `http://localhost:5173`
+The frontend will run on `http://localhost:9000`
 
 ## Verifying the Setup
 
-1. Open your browser to `http://localhost:5173`
+1. Open your browser to `http://localhost:9000`
 2. You should be redirected to Auth0 login
 3. After logging in, you should see the chat interface
 4. Try sending a message to the AI assistant
@@ -188,18 +247,46 @@ The frontend will run on `http://localhost:5173`
 
 ### Backend Errors
 
-- **"Module not found"**: Run `uv sync` again in the backend directory
-- **"API error"**: Verify your Google AI API key is correct and enabled. Get one at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+- **"Module not found"**: Run `cd backend && uv sync` again
+- **"API error"**: Verify your API key is correct and enabled
+- **"Cannot start FastAPI"**: Check that port 8000 is not already in use
 
 ### Frontend Errors
 
-- **"Cannot connect to backend"**: Make sure the backend server is running
+- **"Cannot connect to backend"**: Make sure the backend server is running on port 8000
 - **"Auth0 configuration error"**: Verify your Auth0 domain and client ID in `.env`
+- **"Module not found"**: Run `cd frontend && npm install`
 
 ### LangGraph Errors
 
 - **"Cannot connect to LangGraph"**: Make sure the LangGraph server is running on port 54367
 - **"Agent not found"**: Verify `langgraph.json` is configured correctly
+- **"Port already in use"**: Kill the process using the port or use a different port
+
+## Key Files Reference
+
+| Purpose | File |
+|---------|------|
+| Agent logic | `backend/app/agents/assistant0.py` |
+| Agent tools | `backend/app/agents/tools/` |
+| API routes | `backend/app/api/routes/` |
+| Frontend UI | `frontend/src/pages/ChatPage.tsx` |
+| Layout | `frontend/src/components/layout.tsx` |
+| Auth UI | `frontend/src/components/auth0/user-button.tsx` |
+| Config | `.idx/dev.nix` or `dev.nix` |
+
+## Deployment
+
+The setup above is for local development with `fastapi dev` and `langgraph dev`.
+
+For **production deployment** to Google Cloud Run and Firebase Hosting, see **[DEPLOYMENT.md](DEPLOYMENT.md)** for:
+
+- Step-by-step deployment instructions
+- Quick deploy commands and scripts
+- Firebase Studio Cloud Run button configuration
+- Security best practices and monitoring
+- Cost optimization tips
+- Troubleshooting and CI/CD setup
 
 ## Next Steps
 
@@ -208,12 +295,34 @@ Once everything is working:
 1. **Customize the Agent**: Edit `backend/app/agents/assistant0.py` to add new capabilities
 2. **Add Tools**: Integrate external APIs and services
 3. **Improve the UI**: Customize the React components in `frontend/src/`
-4. **Deploy**: Deploy to your preferred hosting platform
+4. **Deploy to Production**: Follow the [DEPLOYMENT.md](DEPLOYMENT.md) guide
+5. **Set up CI/CD**: Automate deployments with GitHub Actions
+6. **Add Monitoring**: Set up alerts in Google Cloud Console
 
-## Getting Help
+## 💡 Next Steps
+
+Once everything is running:
+
+1. **Customize the Agent**: Edit `backend/app/agents/assistant0.py` to add new capabilities
+2. **Add Tools**: Integrate external APIs and services in `backend/app/agents/tools/`
+3. **Improve the UI**: Customize React components in `frontend/src/`
+4. **Deploy to Production**: Follow the [DEPLOYMENT.md](DEPLOYMENT.md) guide
+5. **Switch LLM Providers**: See [GEMINI.md](GEMINI.md) for using Google Gemini models
+
+## 📚 Additional Documentation
+
+- **[README.md](README.md)** - Project overview and features
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment guide
+- **[STRUCTURE.md](STRUCTURE.md)** - Architecture and file organization
+- **[GEMINI.md](GEMINI.md)** - LLM provider guide (OpenAI/Gemini)
+
+## 🔗 Getting Help
 
 - [Auth0 Documentation](https://auth0.com/docs)
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [Firebase Studio Documentation](https://firebase.google.com/docs/studio)
+- [Cloud Run Documentation](https://cloud.google.com/run/docs)
 - [GitHub Issues](https://github.com/priley86/auth0-firebase-fastapi-langchain-starter/issues)
+- [Auth0 Community](https://community.auth0.com/)
+- [LangChain Discord](https://discord.gg/langchain)
