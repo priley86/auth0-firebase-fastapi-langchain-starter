@@ -26,7 +26,7 @@ fastapi dev app/main.py  # Terminal 1
 # LangGraph (in a new terminal)
 cd backend
 source .venv/bin/activate
-langgraph dev --port 54367 --no-browser  # Terminal 2
+langgraph dev --port 54367 --no-browser --allow-blocking  # Terminal 2
 
 # Frontend (in a new terminal)
 cd frontend
@@ -217,7 +217,7 @@ The backend will run on `http://localhost:8000`
 ```bash
 cd backend
 source .venv/bin/activate
-langgraph dev --port 54367 --no-browser
+langgraph dev --port 54367 --no-browser --allow-blocking
 ```
 
 The LangGraph server will run on `http://localhost:54367`

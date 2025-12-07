@@ -245,7 +245,7 @@ fastapi dev app/main.py
 # LangGraph (separate terminal)
 cd backend
 source .venv/bin/activate
-langgraph dev --port 54367
+langgraph dev --port 54367 --allow-blocking
 
 # Frontend (separate terminal)
 cd frontend

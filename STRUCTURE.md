@@ -187,7 +187,7 @@ frontend/
 1. **Firebase Studio (Project IDX)**: Click "Open in IDX" → workspace initializes → servers start automatically
 2. **Local Development**: 
    - Start backend: `cd backend && uv sync && fastapi dev app/main.py`
-   - Start LangGraph: `cd backend && langgraph dev --port 54367`
+   - Start LangGraph: `cd backend && langgraph dev --port 54367 --allow-blocking`
    - Start frontend: `cd frontend && npm install && npm run dev`
 
 ## Environment Variables
