@@ -18,7 +18,8 @@ class Settings(BaseSettings):
     AUTH0_CLIENT_ID: str = ""
     AUTH0_CLIENT_SECRET: str = ""
     AUTH0_SECRET: str = ""
-    APP_BASE_URL: str = ""
+    # Optional during initial deployment (defaults to localhost)
+    APP_BASE_URL: str = "http://localhost:8000"
 
     OPENAI_API_KEY: str = ""
 

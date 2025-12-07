@@ -1,29 +1,28 @@
 # Production Deployment Guide
 
-This guide covers deploying your AI assistant to production using Google Cloud Run for backend services and Firebase Hosting for the frontend.
+This guide covers deploying your AI assistant to production using Google Cloud Run for all services.
 
 ## Architecture Overview
 
-This template uses Firebase's recommended architecture for dynamic applications (see [Firebase Hosting Documentation](https://firebase.google.com/docs/hosting)):
-- **Frontend**: Static assets served via Firebase Hosting (CDN-optimized)
-- **Backend Services**: Dynamic server-side logic on Google Cloud Run (auto-scaling containers)
+All components are deployed to Google Cloud Run:
+- **Frontend**: React SPA with nginx proxy (forwards /api/** to backend)
+- **Backend**: FastAPI server with Auth0 authentication
+- **LangGraph**: AI agent runtime
 
 ### Deployment Components
 
 1. **LangGraph Server** → Google Cloud Run (AI agent runtime)
 2. **FastAPI Backend** → Google Cloud Run (API server with Auth0)
-3. **React Frontend** → Firebase Hosting (Static site with CDN)
+3. **React Frontend** → Google Cloud Run (Static site with nginx proxy)
 
 ## Prerequisites
 
 ### Required Accounts
 - [Google Cloud Platform](https://console.cloud.google.com/) account
 - [Auth0](https://auth0.com/) account (already configured)
-- [Firebase](https://console.firebase.google.com/) account (for frontend hosting)
 
 ### Required Tools
 - [gcloud CLI](https://cloud.google.com/sdk/docs/install) installed and configured
-- [Firebase CLI](https://firebase.google.com/docs/cli) installed
 
 ### Enable Google Cloud APIs
 
@@ -36,6 +35,19 @@ gcloud services enable cloudbuild.googleapis.com
 gcloud services enable run.googleapis.com
 gcloud services enable containerregistry.googleapis.com
 ```
+
+## Deployment Steps Overview
+
+Deployment follows these steps:
+
+1. **Configure Environment** - Set up `backend/.env.production` with initial credentials
+2. **Deploy LangGraph** - Get LangGraph URL, add to `backend/.env.production`
+3. **Deploy Backend** - Get backend URL, update nginx config in frontend
+4. **Deploy Frontend** - Build and deploy to Cloud Run with nginx proxy
+5. **Update Backend Config** - Add frontend URL to `backend/.env.production` and redeploy
+6. **Update Auth0** - Configure callback URLs with frontend URL
+
+**Note:** The backend requires redeployment after frontend deployment because `APP_BASE_URL` and `CORS` must be configured with the frontend URL for Auth0 callback handling to work correctly.
 
 ## Deployment Steps
 
@@ -114,6 +126,8 @@ chmod +x scripts/deploy-backend.sh
 ./scripts/deploy-backend.sh
 ```
 
+**Note:** The initial deployment will succeed with `APP_BASE_URL` defaulting to localhost. You'll need to redeploy after frontend deployment to set the correct frontend URL.
+
 #### Save the Backend URL
 
 After deployment completes, you'll see:
@@ -121,128 +135,88 @@ After deployment completes, you'll see:
 Backend API URL: https://backend-api-xxx-uc.a.run.app
 ```
 
-**Copy this URL** - you'll need it for Auth0 configuration and frontend deployment.
-
-#### Update Auth0 Application Settings
-
-1. Go to your [Auth0 Dashboard](https://manage.auth0.com/)
-2. Navigate to **Applications** > **Applications** > Your Application
-3. Update the following settings:
-
-**Allowed Callback URLs:**
-```
-https://backend-api-xxx-uc.a.run.app/api/callback
+**Add this URL to `frontend/.env.production`:**
+```bash
+BACKEND_URL="https://backend-api-xxx-uc.a.run.app"
 ```
 
-**Allowed Logout URLs:**
-```
-https://your-frontend-domain.web.app
-```
+### Step 4: Deploy Frontend to Cloud Run
 
-**Allowed Web Origins:**
-```
-https://your-frontend-domain.web.app
-```
-
-### Step 4: Deploy Frontend to Firebase Hosting
-
-#### Initialize Firebase
+The frontend is a React SPA served by nginx, which also proxies API requests to the backend.
 
 ```bash
-# Install Firebase CLI (if not already installed)
-npm install -g firebase-tools
+# Make script executable (first time only)
+chmod +x scripts/deploy-frontend.sh
 
-# Login to Firebase
-firebase login
-
-# Initialize Firebase in your project (first time only)
-firebase init hosting
+# Run deployment (will prompt for backend URL)
+./scripts/deploy-frontend.sh
 ```
 
-When prompted:
-- **Public directory:** Select `frontend/dist`
-- **Configure as single-page app:** Yes
-- **Set up automatic builds:** No (we'll do manual builds)
-
-#### Configure Frontend Environment
-
-Create `frontend/.env.production`:
-
-```env
-# Backend API URL (from Step 2)
-VITE_API_URL=https://backend-api-xxx-uc.a.run.app
-```
-
-#### Build and Deploy
-
-```bash
-# Build the frontend
-cd frontend
-npm run build
-
-# Deploy to Firebase Hosting
-firebase deploy --only hosting
-```
+The script will:
+1. Read `BACKEND_URL` from `frontend/.env.production` (or prompt if not set)
+2. Build a Docker image with your React app and nginx
+3. Configure nginx to proxy `/api/**` to your backend
+4. Push the image to Google Container Registry
+5. Deploy to Cloud Run with the `BACKEND_HOST` environment variable
+6. Output the service URL
 
 #### Save the Frontend URL
 
-After deployment, you'll see:
+After deployment completes, you'll see:
 ```
-Hosting URL: https://your-project.web.app
+Frontend URL: https://frontend-app-xxx-uc.a.run.app
 ```
 
-#### Update Backend CORS
+**Copy this URL** - you'll need it for the next steps.
 
-Now that you have your frontend URL, update `backend/.env.production`:
+### Step 5: Update Backend Configuration and Redeploy
+
+**⚠️ Critical Step:** Now that you have your frontend URL, update `backend/.env.production`:
 
 ```bash
-FRONTEND_HOST="https://your-project.web.app"
-BACKEND_CORS_ORIGINS="https://your-project.web.app"
+# Set all three to your frontend URL
+APP_BASE_URL="https://frontend-app-xxx-uc.a.run.app"
+FRONTEND_HOST="https://frontend-app-xxx-uc.a.run.app"
+BACKEND_CORS_ORIGINS="https://frontend-app-xxx-uc.a.run.app"
 ```
 
-Redeploy backend with updated CORS:
+**Redeploy the backend** to apply these settings:
 ```bash
 ./scripts/deploy-backend.sh
 ```
 
-#### Update Auth0 (Again)
+This second deployment ensures:
+- Auth0 callbacks work correctly (via `APP_BASE_URL`)
+- CORS allows requests from your frontend
+- Your application is fully connected
 
-Go back to Auth0 and update with your actual frontend URL:
+### Step 6: Update Auth0 Configuration
+
+Go to your [Auth0 Dashboard](https://manage.auth0.com/) and update with your frontend Cloud Run URL:
+
+**Allowed Callback URLs:**
+```
+https://frontend-app-xxx-uc.a.run.app/api/auth/callback
+```
 
 **Allowed Logout URLs:**
 ```
-https://your-project.web.app
+https://frontend-app-xxx-uc.a.run.app
 ```
 
 **Allowed Web Origins:**
 ```
-https://your-project.web.app
+https://frontend-app-xxx-uc.a.run.app
 ```
-
-### Alternative: Deploy from Firebase Studio UI
-
-If you're using Firebase Studio, you can deploy using the **Deploy to Cloud Run** button:
-
-**For LangGraph Server:**
-- **Deploy Path**: `backend`
-- **Dockerfile**: `Dockerfile.langgraph`
-- **Port**: `54367`
-
-**For FastAPI Backend:**
-- **Deploy Path**: `backend`
-- **Dockerfile**: `Dockerfile`
-- **Port**: `8000`
-
-Firebase Studio will automatically build, push, and deploy your containers to Cloud Run. Make sure to set the environment variables in the Cloud Run configuration.
 
 ## Verification
 
 ### Test Your Deployment
 
-1. **Open your frontend:** `https://your-project.web.app`
-2. **Login with Auth0**
+1. **Open your frontend:** `https://frontend-app-xxx-uc.a.run.app`
+2. **Click "Login" and authenticate with Auth0**
 3. **Send a message to the AI assistant**
-4. **Verify the response**
+4. **Verify you get a response**
 
 ### Check Service Health
 
@@ -309,6 +283,32 @@ Cloud Run pricing is based on:
    ```
 
 ## Troubleshooting
+
+### Frontend Not Proxying to Backend
+
+**Issue:** API calls fail or CORS errors
+
+**Solution:**
+1. Check the `BACKEND_HOST` environment variable in Cloud Run:
+   ```bash
+   gcloud run services describe frontend-app --region us-central1 \
+     --format="value(spec.template.spec.containers[0].env)"
+   ```
+2. Verify it contains the correct backend hostname (without https://)
+3. Redeploy frontend with correct `BACKEND_URL`:
+   ```bash
+   export BACKEND_URL="https://your-backend-url"
+   ./scripts/deploy-frontend.sh
+   ```
+
+### Cookies Not Working
+
+**Issue:** Auth0 login redirects work but subsequent API calls fail
+
+**Solution:**
+1. Verify nginx is forwarding cookies (check `proxy_pass_header Set-Cookie`)
+2. Verify `proxy_cookie_domain` is rewriting backend domain to frontend domain
+3. Check that `withCredentials: true` is set in frontend axios client
 
 ### Container Fails to Start
 
@@ -381,10 +381,8 @@ After making code changes, simply redeploy:
 # Redeploy Backend
 ./scripts/deploy-backend.sh
 
-# Rebuild and redeploy Frontend
-cd frontend
-npm run build
-firebase deploy --only hosting
+# Redeploy Frontend
+./scripts/deploy-frontend.sh
 ```
 
 ### Update Environment Variables

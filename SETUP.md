@@ -73,7 +73,7 @@ In your application settings:
 For Firebase Studio/IDX, you'll need to add:
 - **Allowed Callback URLs**: 
   ```
-  https://9000-<YOUR-WORKSPACE-ID>.<YOUR-CLUSTER-ID>.cloudworkkstations.dev/api/callback
+  https://9000-<YOUR-WORKSPACE-ID>.<YOUR-CLUSTER-ID>.cloudworkkstations.dev/api/auth/callback
   ```
 - **Allowed Logout URLs**:
   ```
@@ -87,7 +87,7 @@ For Firebase Studio/IDX, you'll need to add:
 For your deployed Firebase app, you'll need the same:
 - **Allowed Callback URLs**: 
   ```
-  https://<YOUR-DOMAIN>/api/callback
+  https://<YOUR-DOMAIN>/api/auth/callback
   ```
   
 - **Allowed Logout URLs**:
@@ -103,7 +103,7 @@ For your deployed Firebase app, you'll need the same:
 For local development, you'll want to also add the following:
 - **Allowed Callback URLs**: 
   ```
-  http://localhost:9000/api/callback
+  http://localhost:9000/api/auth/callback
   ```
   
 - **Allowed Logout URLs**:
@@ -161,7 +161,8 @@ AUTH0_SECRET=your-generated-secret-key
 OPENAI_API_KEY=your-api-key
 
 # Application URLs
-APP_BASE_URL=http://localhost:8000
+# APP_BASE_URL is the frontend URL (used for Auth0 callbacks)
+APP_BASE_URL=http://localhost:9000
 FRONTEND_HOST=http://localhost:9000
 
 # LangGraph Configuration

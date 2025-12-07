@@ -18,6 +18,10 @@ htmlcov/
 .env.local
 .env.production
 
+# Firebase
+.firebaserc
+.firebase/
+
 # Node
 node_modules/
 npm-debug.log*

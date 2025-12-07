@@ -112,24 +112,12 @@ The frontend uses Tailwind CSS. You can customize:
 
 ## Deployment
 
-This template includes production-ready deployment scripts for Google Cloud Run and Firebase Hosting.
+This template includes production-ready deployment scripts for Google Cloud Run.
 
 ### 📚 Documentation
 
 - **[SETUP.md](SETUP.md)** - Initial setup and local development
 - **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment guide
-
-### 🚀 Quick Deploy
-
-See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete instructions, or use the quick deploy scripts:
-
-```bash
-# Deploy all services to production
-export GCP_PROJECT_ID="your-project-id"
-./scripts/deploy-langgraph.sh    # Deploy AI agents
-./scripts/deploy-backend.sh      # Deploy API server
-firebase deploy --only hosting    # Deploy frontend
-```
 
 ### 🌐 Architecture
 
