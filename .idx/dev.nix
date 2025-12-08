@@ -91,7 +91,7 @@
         start-backend = "cd backend && uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000";
         
         # Start the LangGraph server
-        start-langgraph = "cd backend && uv run langgraph dev --port 54367 --host 0.0.0.0 --no-browser --alow-blocking";
+        start-langgraph = "cd backend && uv run langgraph dev --port 54367 --host 0.0.0.0 --no-browser --allow-blocking";
       };
     };
   };
