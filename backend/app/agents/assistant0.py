@@ -1,5 +1,5 @@
 from langgraph.prebuilt import ToolNode, create_react_agent
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.agents.tools.google_calendar import list_upcoming_events
 from datetime import date
@@ -7,14 +7,14 @@ from datetime import date
 tools = [list_upcoming_events]
 
 # Initialize the LLM
-# This template supports both OpenAI and Google Gemini models
+# This template supports both Google Gemini and OpenAI models
 # 
-# For OpenAI (using langchain_openai.ChatOpenAI):
-llm = ChatOpenAI(model="gpt-4o-mini")  # or "gpt-4o", "gpt-4-turbo", etc.
+# For Google Gemini (default):
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")  # or "gemini-1.5-pro", "gemini-1.5-flash", etc.
 #
-# For Google Gemini (see GEMINI.md for setup):
-# from langchain_google_genai import ChatGoogleGenerativeAI
-# llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")  # or "gemini-pro", "gemini-1.5-pro", etc.
+# For OpenAI (see GEMINI.md for setup):
+# from langchain_openai import ChatOpenAI
+# llm = ChatOpenAI(model="gpt-4o-mini")  # or "gpt-4o", "gpt-4-turbo", etc.
 
 def get_prompt():
     today_str = date.today().strftime('%Y-%m-%d')

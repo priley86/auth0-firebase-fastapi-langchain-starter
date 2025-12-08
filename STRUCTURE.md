@@ -160,8 +160,9 @@ frontend/
 - **LangGraph**: Framework for building AI agents
 - **Auth0 FastAPI SDK**: Authentication middleware and routes
 - **Auth0 AI SDK**: Integration for calling third-party APIs on behalf of users
-- **Google Gemini**: LLM provider (via OpenAI-compatible interface)
-- **langchain_openai**: LangChain integration supporting Gemini models
+- **Google Gemini**: LLM provider (default, via langchain-google-genai)
+- **langchain-google-genai**: LangChain integration for Gemini models
+- **langchain-openai**: LangChain integration for OpenAI models (optional)
 - **uv**: Fast Python package manager
 
 ### Frontend
@@ -194,7 +195,7 @@ frontend/
 
 ### Backend (`backend/.env`)
 - Auth0 credentials (domain, client ID, secret)
-- OpenAI API key
+- Google AI API key (or OpenAI API key)
 - Application URLs
 - CORS origins
 
@@ -209,7 +210,7 @@ frontend/
 3. **Backend**: Auth0 FastAPI SDK validates session and user
 4. **Backend → LangGraph**: Proxied request with user credentials in `config.configurable._credentials`
 5. **LangGraph → Agent**: assistant0 agent processes message
-6. **Agent → Gemini**: LLM call via OpenAI-compatible interface (langchain_openai)
+6. **Agent → Gemini**: LLM call via langchain-google-genai
 7. **Agent → Tools**: May call tools (e.g., Google Calendar) on behalf of user via Auth0 AI SDK
 8. **Gemini → Agent**: Response generated
 9. **Agent → LangGraph**: Response with tool results

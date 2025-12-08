@@ -11,14 +11,14 @@ This template provides a full-stack AI application starter with:
 - **[Auth0](https://auth0.com/)** for authentication and authorization
 - **[FastAPI](https://fastapi.tiangolo.com/)** for the backend API
 - **[LangChain](https://python.langchain.com/)** and **[LangGraph](https://langchain-ai.github.io/langgraph/)** for building AI agents
-- **Flexible LLM support** - easily swap between **[OpenAI](https://openai.com/)** and **[Google Gemini](https://ai.google.dev/)** models
+- **Flexible LLM support** - easily swap between **[Google Gemini](https://ai.google.dev/)** (default) and **[OpenAI](https://openai.com/)** models
 - **[Vite](https://vite.dev/)** + **[React](https://react.dev/)** for the frontend
 - **[Firebase Studio (Project IDX)](https://idx.google.com/)** for the development environment
 
 ## Features
 
 - 🔐 **Secure Authentication** with Auth0 FastAPI SDK
-- 🤖 **AI-Powered Chat** using LangGraph agents (supports OpenAI & Google Gemini)
+- 🤖 **AI-Powered Chat** using LangGraph agents (supports Google Gemini & OpenAI)
 - 🔌 **Third-Party API Integration** via Auth0 AI SDK (Token Vault)
 - 🚀 **Fast Development** with hot reload on frontend and backend
 - 📦 **Modern Stack** with TypeScript, Python 3.13+, React 19, and Tailwind CSS 4
@@ -57,12 +57,12 @@ The project is divided into three main parts:
 
 - An [Auth0](https://auth0.com/) account with a Web Application configured
 - An LLM API key:
-  - **[OpenAI API key](https://platform.openai.com/api-keys)** for GPT models, OR
-  - **[Google AI API key](https://aistudio.google.com/app/apikey)** for Gemini models
+  - **[Google AI API key](https://aistudio.google.com/app/apikey)** for Gemini models (default), OR
+  - **[OpenAI API key](https://platform.openai.com/api-keys)** for GPT models
 - A [Firebase Studio (Project IDX)](https://idx.google.com/) workspace (or local development environment)
 - (Optional) Google Calendar API credentials if using the calendar tool
 
-> **Note**: This template supports both OpenAI and Google Gemini models. The default configuration uses OpenAI's `gpt-4o-mini`. To switch to Google Gemini models, see `GEMINI.md` for detailed instructions.
+> **Note**: This template supports both Google Gemini and OpenAI models. The default configuration uses Google Gemini's `gemini-2.0-flash-exp`. To switch to OpenAI models, see `GEMINI.md` for detailed instructions.
 
 ### Quick Start with Firebase Studio (Project IDX)
 
@@ -99,7 +99,7 @@ The LangGraph agent is defined in `backend/app/agents/assistant0.py`. You can:
 
 - Change the system prompt in the `get_prompt()` function
 - Add new tools in `backend/app/agents/tools/`
-- Switch between LLM providers (OpenAI/Gemini) and models (see GEMINI.md)
+- Switch between LLM providers (Gemini/OpenAI) and models (see GEMINI.md)
 - Modify the agent's reasoning approach (ReAct, Planning, etc.)
 
 ### Styling the Frontend

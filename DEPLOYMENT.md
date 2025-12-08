@@ -75,7 +75,7 @@ AUTH0_CLIENT_SECRET="your-client-secret"
 AUTH0_SECRET="generate-with-openssl-rand-hex-32"
 
 # LLM Provider
-OPENAI_API_KEY="your-openai-api-key"
+GOOGLE_API_KEY="your-google-ai-api-key"
 
 # Optional: LangSmith tracing
 LANGCHAIN_API_KEY="your-langsmith-api-key"
@@ -435,7 +435,7 @@ jobs:
       - name: Deploy LangGraph
         run: |
           export GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
-          export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          export GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
           ./scripts/deploy-langgraph.sh
       
       - name: Deploy Backend

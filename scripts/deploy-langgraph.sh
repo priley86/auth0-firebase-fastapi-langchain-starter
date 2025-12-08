@@ -44,18 +44,18 @@ if [ -z "$PROJECT_ID" ]; then
     exit 1
 fi
 
-if [ -z "$OPENAI_API_KEY" ] && [ -z "$GOOGLE_API_KEY" ]; then
-    echo -e "${RED}Error: Neither OPENAI_API_KEY nor GOOGLE_API_KEY is set${NC}"
+if [ -z "$GOOGLE_API_KEY" ] && [ -z "$OPENAI_API_KEY" ]; then
+    echo -e "${RED}Error: Neither GOOGLE_API_KEY nor OPENAI_API_KEY is set${NC}"
     echo "Set at least one in backend/.env.production"
     exit 1
 fi
 
-if [ ! -z "$OPENAI_API_KEY" ]; then
-    echo -e "${GREEN}✓ OPENAI_API_KEY is set${NC}"
-fi
-
 if [ ! -z "$GOOGLE_API_KEY" ]; then
     echo -e "${GREEN}✓ GOOGLE_API_KEY is set${NC}"
+fi
+
+if [ ! -z "$OPENAI_API_KEY" ]; then
+    echo -e "${GREEN}✓ OPENAI_API_KEY is set${NC}"
 fi
 
 # Check if gcloud is installed
@@ -103,15 +103,15 @@ rm -f /tmp/cloudbuild-langgraph.yaml
 ENV_VARS=""
 
 # Add LLM API keys
-if [ ! -z "$OPENAI_API_KEY" ]; then
-    ENV_VARS="OPENAI_API_KEY=${OPENAI_API_KEY}"
+if [ ! -z "$GOOGLE_API_KEY" ]; then
+    ENV_VARS="GOOGLE_API_KEY=${GOOGLE_API_KEY}"
 fi
 
-if [ ! -z "$GOOGLE_API_KEY" ]; then
+if [ ! -z "$OPENAI_API_KEY" ]; then
     if [ -z "$ENV_VARS" ]; then
-        ENV_VARS="GOOGLE_API_KEY=${GOOGLE_API_KEY}"
+        ENV_VARS="OPENAI_API_KEY=${OPENAI_API_KEY}"
     else
-        ENV_VARS="${ENV_VARS},GOOGLE_API_KEY=${GOOGLE_API_KEY}"
+        ENV_VARS="${ENV_VARS},OPENAI_API_KEY=${OPENAI_API_KEY}"
     fi
 fi
 

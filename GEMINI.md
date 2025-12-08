@@ -1,12 +1,12 @@
-# LLM Provider Guide (OpenAI & Google Gemini)
+# LLM Provider Guide (Google Gemini & OpenAI)
 
-This document explains how to use and switch between different LLM providers (OpenAI and Google Gemini) in this template.
+This document explains how to use and switch between different LLM providers (Google Gemini and OpenAI) in this template.
 
 ## Project Overview
 
 This is a **Firebase Studio (Project IDX) community template** that provides a full-stack AI application starter with:
 - **Backend**: FastAPI (Python 3.13+) with Auth0 authentication
-- **AI Agent**: LangGraph with flexible LLM support (OpenAI, Google Gemini, and others)
+- **AI Agent**: LangGraph with flexible LLM support (Google Gemini, OpenAI, and others)
 - **Frontend**: React 19 + Vite + TypeScript
 - **Dev Environment**: Firebase Studio with NIX configuration
 
@@ -24,7 +24,7 @@ This is a **Firebase Studio (Project IDX) community template** that provides a f
 User → Frontend (Auth0 login)
 Frontend → Backend (/api/agent/*) [Authenticated]
 Backend → LangGraph Server [With user context]
-LangGraph → LLM (OpenAI/Gemini) [Agent processing]
+LangGraph → LLM (Gemini/OpenAI) [Agent processing]
 LLM → LangGraph → Backend → Frontend [Streaming response]
 ```
 
@@ -88,74 +88,27 @@ Frontend (React/TypeScript)
 
 This template supports multiple LLM providers. Choose the one that best fits your needs.
 
-### Option 1: OpenAI (Default)
+### Option 1: Google Gemini (Default)
 
 **Current Configuration**:
-The template uses OpenAI by default through LangChain's `ChatOpenAI` class:
+The template uses Google Gemini by default through LangChain's `ChatGoogleGenerativeAI` class:
 
 ```python
 # backend/app/agents/assistant0.py
-from langchain_openai import ChatOpenAI
-llm = ChatOpenAI(model="gpt-4o-mini")
+from langchain_google_genai import ChatGoogleGenerativeAI
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
 ```
 
 **Setup**:
-1. Get an API key from [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+1. Get an API key from [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 2. Set it in `backend/.env`:
    ```env
-   OPENAI_API_KEY=your-openai-api-key
+   GOOGLE_API_KEY=your-google-ai-api-key
    ```
 
 **Available Models**:
 ```python
-llm = ChatOpenAI(model="gpt-4o-mini")      # Fast, cost-effective (default)
-llm = ChatOpenAI(model="gpt-4o")           # Most capable
-llm = ChatOpenAI(model="gpt-4-turbo")      # Balanced performance
-llm = ChatOpenAI(model="gpt-3.5-turbo")    # Legacy, fastest
-```
-
-**Advantages**:
-- ✅ No additional dependencies needed (already installed)
-- ✅ Well-documented and widely supported
-- ✅ High-quality responses
-- ✅ Good function calling support
-
-### Option 2: Google Gemini
-
-To use Google Gemini models, you need to use the native `langchain-google-genai` integration:
-
-**Setup Steps**:
-
-1. **Install the dependency**:
-   ```bash
-   cd backend
-   uv add langchain-google-genai
-   ```
-
-2. **Get a Google AI API key**:
-   - Visit [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-   - Create or copy your API key
-
-3. **Update `backend/.env`**:
-   ```env
-   # Add GOOGLE_API_KEY
-   GOOGLE_API_KEY=your-google-ai-api-key
-   ```
-
-4. **Modify `backend/app/agents/assistant0.py`**:
-   ```python
-   # Change from:
-   from langchain_openai import ChatOpenAI
-   llm = ChatOpenAI(model="gpt-4o-mini")
-   
-   # To:
-   from langchain_google_genai import ChatGoogleGenerativeAI
-   llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
-   ```
-
-**Available Gemini Models**:
-```python
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")  # Latest, fastest
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")  # Latest, fastest (default)
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")        # Most capable
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")      # Fast, efficient
 llm = ChatGoogleGenerativeAI(model="gemini-pro")            # Stable, general
@@ -166,6 +119,48 @@ llm = ChatGoogleGenerativeAI(model="gemini-pro")            # Stable, general
 - ✅ Gemini-specific features (safety settings, grounding)
 - ✅ Often more cost-effective
 - ✅ Strong multimodal capabilities
+- ✅ Good function calling support
+
+### Option 2: OpenAI
+
+To use OpenAI models instead of Gemini:
+
+**Setup Steps**:
+
+1. **Get an OpenAI API key**:
+   - Visit [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+   - Create or copy your API key
+
+2. **Update `backend/.env`**:
+   ```env
+   # Add OPENAI_API_KEY
+   OPENAI_API_KEY=your-openai-api-key
+   ```
+
+3. **Modify `backend/app/agents/assistant0.py`**:
+   ```python
+   # Change from:
+   from langchain_google_genai import ChatGoogleGenerativeAI
+   llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
+   
+   # To:
+   from langchain_openai import ChatOpenAI
+   llm = ChatOpenAI(model="gpt-4o-mini")
+   ```
+
+**Available OpenAI Models**:
+```python
+llm = ChatOpenAI(model="gpt-4o-mini")      # Fast, cost-effective
+llm = ChatOpenAI(model="gpt-4o")           # Most capable
+llm = ChatOpenAI(model="gpt-4-turbo")      # Balanced performance
+llm = ChatOpenAI(model="gpt-3.5-turbo")    # Legacy, fastest
+```
+
+**Advantages**:
+- ✅ No additional dependencies needed (already installed)
+- ✅ Well-documented and widely supported
+- ✅ High-quality responses
+- ✅ Good function calling support
 
 **Important Note**: 
 `ChatOpenAI` from `langchain_openai` is specifically for OpenAI models and does NOT support Gemini models despite some documentation suggesting otherwise. You must use `ChatGoogleGenerativeAI` from `langchain_google_genai` to use Gemini models.
